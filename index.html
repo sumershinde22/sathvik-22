@@ -1,0 +1,2443 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Happy Birthday!</title>
+    <meta
+      name="description"
+      content="A little corner of the internet for a big birthday."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ---------- Theme ---------- */
+      :root {
+        --paper: #efe9de;
+        --white: #fbf8f2;
+        --ink: #121110;
+        --red: #ff3b1f;
+        --yellow: #ffd23f;
+        --blue: #2f5bff;
+        --gutter: clamp(16px, 4vw, 48px);
+        --display: "Anton", Impact, "Arial Narrow", sans-serif;
+        --serif: "Instrument Serif", Georgia, serif;
+        --sans: "Instrument Sans", system-ui, sans-serif;
+        --mono: "Space Mono", ui-monospace, monospace;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: var(--sans);
+        font-size: 1.0625rem;
+        line-height: 1.5;
+        overflow-x: clip;
+        -webkit-font-smoothing: antialiased;
+      }
+      img {
+        display: block;
+        max-width: 100%;
+      }
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+      a {
+        color: inherit;
+      }
+      ::selection {
+        background: var(--red);
+        color: var(--ink);
+      }
+      :focus-visible {
+        outline: 3px solid var(--blue);
+        outline-offset: 3px;
+      }
+      .mono {
+        font-family: var(--mono);
+        font-size: 0.76rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .dim {
+        opacity: 0.55;
+      }
+      @media (max-width: 759px) {
+        .only-lg {
+          display: none !important;
+        }
+      }
+      @media (min-width: 760px) {
+        .only-sm {
+          display: none !important;
+        }
+      }
+      @media (max-width: 560px) {
+        .hide-sm {
+          display: none;
+        }
+      }
+
+      #confetti {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+      .grain {
+        position: fixed;
+        inset: 0;
+        z-index: 45;
+        pointer-events: none;
+        opacity: 0.2;
+        mix-blend-mode: multiply;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      }
+
+      /* ---------- Buttons ---------- */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6em;
+        padding: 0.95em 1.4em;
+        border: 2px solid var(--ink);
+        background: var(--paper);
+        color: var(--ink);
+        font-family: var(--mono);
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        text-decoration: none;
+        cursor: pointer;
+        box-shadow: 4px 4px 0 var(--ink);
+        transition:
+          transform 0.12s ease,
+          box-shadow 0.12s ease;
+      }
+      .btn:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: 6px 6px 0 var(--ink);
+      }
+      .btn:active {
+        transform: translate(4px, 4px);
+        box-shadow: 0 0 0 var(--ink);
+      }
+      .btn:disabled {
+        opacity: 0.6;
+        cursor: default;
+        transform: none;
+        box-shadow: 4px 4px 0 var(--ink);
+      }
+      .btn-ink {
+        background: var(--ink);
+        color: var(--paper);
+      }
+
+      /* ---------- Intro: the bouncing birthday card ---------- */
+      html.intro-on,
+      html.intro-on body {
+        overflow: hidden;
+      }
+      html.intro-on .ch {
+        animation-play-state: paused;
+      }
+      .intro {
+        position: fixed;
+        inset: 0;
+        z-index: 44;
+        display: grid;
+        place-items: center;
+        padding: 16px;
+        background: var(--paper);
+        transition:
+          transform 0.9s cubic-bezier(0.7, 0, 0.2, 1),
+          opacity 0.9s ease;
+      }
+      .intro.gone {
+        opacity: 0;
+        transform: translateY(-100%);
+        pointer-events: none;
+      }
+      .intro-skip {
+        position: absolute;
+        top: 16px;
+        right: var(--gutter);
+        padding: 6px 0;
+        border: 0;
+        background: none;
+        color: var(--ink);
+        cursor: pointer;
+      }
+      .intro-hint {
+        position: absolute;
+        top: 16px;
+        left: var(--gutter);
+        padding: 6px 0;
+        transition: opacity 0.4s;
+      }
+      .intro.opened .intro-hint {
+        opacity: 0;
+      }
+      .card-stage {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .bouncer {
+        animation: bounce 1.5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+      }
+      .intro.opened .bouncer {
+        animation: none;
+      }
+      @keyframes bounce {
+        0%,
+        100% {
+          transform: translateY(0) scale(1.03, 0.97);
+        }
+        12% {
+          transform: translateY(0) scale(1);
+        }
+        50% {
+          transform: translateY(-30px) rotate(-1.5deg);
+        }
+        88% {
+          transform: translateY(0) scale(1);
+        }
+      }
+      .card-shadow {
+        width: 70%;
+        height: 16px;
+        margin-top: 18px;
+        border-radius: 50%;
+        background: rgba(18, 17, 16, 0.18);
+        filter: blur(4px);
+        animation: shadow 1.5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+        transition: opacity 0.4s;
+      }
+      .intro.opened .card-shadow {
+        opacity: 0;
+        animation: none;
+      }
+      @keyframes shadow {
+        50% {
+          transform: scale(0.72);
+          opacity: 0.5;
+        }
+      }
+
+      .card {
+        --w: min(84vw, 380px);
+        position: relative;
+        width: var(--w);
+        height: calc(var(--w) * 0.78);
+        perspective: 1600px;
+        cursor: pointer;
+        transition: transform 1.1s cubic-bezier(0.3, 0.7, 0.2, 1);
+      }
+      .intro.opened .card {
+        transform: translateY(50%);
+        cursor: default;
+      }
+      .card-inside,
+      .cover-front,
+      .cover-back {
+        position: absolute;
+        inset: 0;
+        border: 2px solid var(--ink);
+        border-radius: 6px;
+      }
+      .card-cover {
+        position: absolute;
+        inset: 0;
+        transform-origin: top center;
+        transform-style: preserve-3d;
+        transition: transform 1.1s cubic-bezier(0.3, 0.7, 0.2, 1);
+      }
+      .intro.opened .card-cover {
+        transform: rotateX(180deg);
+      }
+      .cover-front,
+      .cover-back {
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+      }
+      .cover-front {
+        overflow: hidden;
+        padding: calc(var(--w) * 0.05);
+        background: var(--red);
+        box-shadow: 0 24px 40px -20px rgba(18, 17, 16, 0.5);
+      }
+      .cf-title {
+        font-family: var(--display);
+        font-size: calc(var(--w) * 0.17);
+        line-height: 0.86;
+        text-transform: uppercase;
+      }
+      .cf-title em {
+        display: block;
+        font-family: var(--serif);
+        font-size: 0.62em;
+        text-transform: none;
+        line-height: 1.1;
+      }
+      .cf-age {
+        position: absolute;
+        right: calc(var(--w) * 0.06);
+        bottom: calc(var(--w) * 0.06);
+        display: grid;
+        place-items: center;
+        width: calc(var(--w) * 0.27);
+        aspect-ratio: 1;
+        border: 2px solid var(--ink);
+        border-radius: 50%;
+        background: var(--yellow);
+        font-family: var(--display);
+        font-size: calc(var(--w) * 0.13);
+        transform: rotate(-10deg);
+        box-shadow: 3px 3px 0 var(--ink);
+      }
+      .cf-stamp {
+        position: absolute;
+        top: calc(var(--w) * 0.05);
+        right: calc(var(--w) * 0.05);
+        display: grid;
+        place-items: center;
+        width: calc(var(--w) * 0.15);
+        aspect-ratio: 5 / 6;
+        border: 2px dashed var(--ink);
+        background: var(--paper);
+        font-size: 0.62rem;
+        text-align: center;
+        line-height: 1.1;
+        transform: rotate(4deg);
+      }
+      .cf-hint {
+        position: absolute;
+        left: calc(var(--w) * 0.05);
+        bottom: calc(var(--w) * 0.05);
+      }
+      .cover-back {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 4px;
+        padding: calc(var(--w) * 0.06);
+        background:
+          linear-gradient(to top, rgba(18, 17, 16, 0.07), transparent 16%),
+          var(--white);
+        transform: rotateX(180deg);
+      }
+      .cb-hi {
+        font-family: var(--serif);
+        font-size: calc(var(--w) * 0.075);
+        font-style: italic;
+        line-height: 1;
+      }
+      .cb-name {
+        font-family: var(--display);
+        font-size: calc(var(--w) * 0.13);
+        line-height: 0.95;
+        text-transform: uppercase;
+        color: var(--red);
+      }
+      .cb-msg {
+        margin-top: 6px;
+        font-family: var(--serif);
+        font-size: clamp(0.95rem, calc(var(--w) * 0.048), 1.15rem);
+        line-height: 1.2;
+      }
+      .card-inside {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: calc(var(--w) * 0.03);
+        padding: calc(var(--w) * 0.06);
+        background:
+          linear-gradient(rgba(18, 17, 16, 0.07), transparent 16%), var(--white);
+      }
+      .ship {
+        border: 2px solid var(--ink);
+      }
+      .ship > div {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 5px 10px;
+      }
+      .ship-head {
+        background: var(--ink);
+        color: var(--paper);
+      }
+      .ship-no {
+        border-bottom: 2px solid var(--ink);
+        text-decoration: line-through;
+        opacity: 0.55;
+      }
+      .ship-yes {
+        background: var(--yellow);
+        font-weight: 700;
+      }
+      .ci-note {
+        font-family: var(--serif);
+        font-size: clamp(1rem, calc(var(--w) * 0.05), 1.25rem);
+        font-style: italic;
+        line-height: 1.15;
+      }
+      .card .btn {
+        align-self: flex-start;
+        padding: 0.75em 1.1em;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .bouncer,
+        .card-shadow {
+          animation: none;
+        }
+      }
+
+      /* ---------- Hero ---------- */
+      .hero {
+        display: flex;
+        flex-direction: column;
+        min-height: 100svh;
+        padding: 0 var(--gutter) 18px;
+      }
+      .masthead {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 16px 0 12px;
+        border-bottom: 2px solid var(--ink);
+      }
+      .hero-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: clamp(28px, 5vh, 56px) 0;
+      }
+      .hero-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+        margin-bottom: clamp(8px, 2vh, 20px);
+      }
+      .kicker {
+        font-family: var(--serif);
+        font-size: clamp(1.7rem, 4.6vw, 3.8rem);
+        line-height: 0.98;
+        letter-spacing: -0.01em;
+      }
+      .kicker em {
+        color: var(--red);
+      }
+
+      .badge {
+        position: relative;
+        flex: none;
+        width: clamp(112px, 15vw, 196px);
+        aspect-ratio: 1;
+      }
+      .badge-ring {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        animation: spin 22s linear infinite;
+      }
+      .badge-ring text {
+        fill: var(--ink);
+        font-family: var(--mono);
+        font-size: 15px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .badge-photo {
+        position: absolute;
+        inset: 21%;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        border: 2px solid var(--ink);
+        border-radius: 50%;
+        background: var(--yellow);
+        font-family: var(--display);
+        font-size: clamp(1.6rem, 3.6vw, 3rem);
+      }
+      .badge-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .title-wrap {
+        position: relative;
+      }
+      .hero-title {
+        font-family: var(--display);
+        font-weight: 400;
+        line-height: 0.84;
+        letter-spacing: -0.005em;
+        text-transform: uppercase;
+      }
+      .fit {
+        display: block;
+        width: max-content;
+        white-space: nowrap;
+      }
+      .age-line {
+        margin-top: 0.05em;
+        color: var(--red);
+      }
+      .ch {
+        display: inline-block;
+        animation: charIn 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        animation-delay: calc(var(--i) * 45ms + 120ms);
+      }
+      @keyframes charIn {
+        from {
+          opacity: 0;
+          transform: translateY(0.35em) rotate(6deg);
+        }
+      }
+
+      .sticker {
+        position: absolute;
+        right: 1%;
+        bottom: -12%;
+        z-index: 3;
+        width: clamp(96px, 13vw, 172px);
+        aspect-ratio: 1;
+        padding: 0;
+        border: 0;
+        background: none;
+        cursor: pointer;
+        filter: drop-shadow(2px 0 0 var(--ink)) drop-shadow(-2px 0 0 var(--ink))
+          drop-shadow(0 2px 0 var(--ink)) drop-shadow(0 -2px 0 var(--ink))
+          drop-shadow(5px 5px 0 var(--ink));
+        animation: wobble 3.5s ease-in-out infinite alternate;
+      }
+      .sticker span {
+        display: grid;
+        place-content: center;
+        width: 100%;
+        height: 100%;
+        background: var(--yellow);
+        color: var(--ink);
+        font-family: var(--display);
+        font-size: clamp(0.8rem, 1.3vw, 1.15rem);
+        line-height: 0.95;
+        text-align: center;
+        text-transform: uppercase;
+      }
+      .sticker b {
+        display: block;
+        font-size: 2.7em;
+        font-weight: 400;
+        line-height: 0.9;
+      }
+      @keyframes wobble {
+        from {
+          transform: rotate(-9deg);
+        }
+        to {
+          transform: rotate(9deg) scale(1.04);
+        }
+      }
+
+      .hero-meta {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px 16px;
+        padding-top: 12px;
+        border-top: 2px solid var(--ink);
+      }
+      .hero-meta > :last-child {
+        text-align: right;
+        text-decoration: none;
+      }
+      @media (max-width: 640px) {
+        .hero-top {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 20px;
+        }
+        .badge {
+          order: -1;
+          align-self: flex-end;
+          width: clamp(140px, 42vw, 180px);
+        }
+        .sticker {
+          position: relative;
+          right: auto;
+          bottom: auto;
+          display: block;
+          margin: 18px 4px 0 auto;
+          width: 104px;
+        }
+        .hero-meta {
+          grid-template-columns: 1fr 1fr;
+        }
+        .hero-meta > :last-child {
+          grid-column: 1 / -1;
+          text-align: left;
+        }
+      }
+
+      /* ---------- Ticker tapes ---------- */
+      .tapes {
+        position: relative;
+        height: clamp(130px, 13vw, 200px);
+        overflow: hidden;
+      }
+      .tape {
+        position: absolute;
+        top: 50%;
+        left: -10%;
+        width: 120%;
+        padding: 0.5em 0;
+        border-block: 2px solid var(--ink);
+        font-family: var(--display);
+        font-size: clamp(1.3rem, 2.6vw, 2.2rem);
+        line-height: 1;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+      .tape-a {
+        background: var(--red);
+        color: var(--ink);
+        transform: translateY(-50%) rotate(-3.5deg);
+      }
+      .tape-b {
+        background: var(--ink);
+        color: var(--paper);
+        transform: translateY(-50%) rotate(2.5deg);
+      }
+      .tape-track {
+        display: flex;
+        width: max-content;
+        animation: marquee 45s linear infinite;
+      }
+      .tape-b .tape-track {
+        animation-direction: reverse;
+      }
+      .tape-track > span {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6em;
+        padding-right: 0.6em;
+      }
+      .star {
+        display: inline-block;
+        width: 0.6em;
+        height: 0.6em;
+        background: currentColor;
+        clip-path: polygon(
+          50% 0,
+          61% 39%,
+          100% 50%,
+          61% 61%,
+          50% 100%,
+          39% 61%,
+          0 50%,
+          39% 39%
+        );
+      }
+      @keyframes marquee {
+        to {
+          transform: translateX(-50%);
+        }
+      }
+
+      /* ---------- Sections ---------- */
+      .section {
+        max-width: 1320px;
+        margin: 0 auto;
+        padding: clamp(64px, 10vw, 140px) var(--gutter);
+      }
+      .sec-head {
+        margin-bottom: clamp(32px, 5vw, 64px);
+      }
+      .sec-bar {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: clamp(12px, 2vw, 24px);
+        padding-top: 12px;
+        border-top: 2px solid currentColor;
+      }
+      h2 {
+        font-family: var(--display);
+        font-size: clamp(3.4rem, 11vw, 9rem);
+        font-weight: 400;
+        line-height: 0.86;
+        text-transform: uppercase;
+      }
+      h2 em {
+        font-family: var(--serif);
+        font-size: 1.08em;
+        letter-spacing: -0.02em;
+        text-transform: none;
+      }
+      .big-serif {
+        max-width: 18ch;
+        font-family: var(--serif);
+        font-size: clamp(1.9rem, 3.6vw, 3.2rem);
+        line-height: 1.04;
+        letter-spacing: -0.01em;
+      }
+      .big-serif span {
+        opacity: 0.45;
+      }
+      .split {
+        display: grid;
+        gap: clamp(36px, 5vw, 72px);
+        align-items: start;
+      }
+      @media (min-width: 900px) {
+        .split {
+          grid-template-columns: minmax(0, 1fr) minmax(0, 460px);
+        }
+        .split.flip {
+          grid-template-columns: minmax(0, 460px) minmax(0, 1fr);
+        }
+        .split.flip > :first-child {
+          order: 2;
+        }
+      }
+      .reveal {
+        opacity: 0;
+        transform: translateY(28px);
+        transition:
+          opacity 0.9s ease,
+          transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      .reveal.in {
+        opacity: 1;
+        transform: none;
+      }
+
+      /* Archive (photo pile) */
+      .print {
+        margin: 0;
+        padding: 10px 10px 0;
+        background: var(--white);
+        box-shadow: 0 18px 30px -12px rgba(18, 17, 16, 0.4);
+        -webkit-user-select: none;
+        user-select: none;
+      }
+      .print::before {
+        content: "";
+        position: absolute;
+        top: -12px;
+        left: 50%;
+        z-index: 1;
+        width: 84px;
+        height: 24px;
+        background: rgba(255, 210, 63, 0.75);
+        transform: translateX(-50%) rotate(-4deg);
+      }
+      .ph {
+        aspect-ratio: 4 / 5;
+        overflow: hidden;
+        background: var(--ink);
+      }
+      .ph img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        pointer-events: none;
+      }
+      .ph.empty {
+        display: grid;
+        place-content: center;
+        gap: 6px;
+        padding: 12px;
+        background: repeating-linear-gradient(
+          -45deg,
+          #1b1a18 0 10px,
+          #24231f 10px 20px
+        );
+        color: var(--paper);
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        text-align: center;
+        text-transform: uppercase;
+      }
+      .ph.empty .plus {
+        font-family: var(--display);
+        font-size: 2.6rem;
+        line-height: 1;
+        color: var(--yellow);
+      }
+      .print figcaption {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        padding: 10px 4px 12px;
+      }
+      .print .no {
+        font-family: var(--mono);
+        font-size: 0.7rem;
+      }
+      .print .cap {
+        font-family: var(--serif);
+        font-size: 1.3rem;
+        font-style: italic;
+        line-height: 1.1;
+      }
+      .pile-actions {
+        margin-top: 36px;
+        text-align: center;
+      }
+      @media (min-width: 760px) {
+        .pile {
+          position: relative;
+          height: clamp(580px, 54vw, 760px);
+        }
+        .print {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: clamp(200px, 20vw, 264px);
+          cursor: grab;
+          touch-action: none;
+          transform: translate(var(--x, 0), var(--y, 0)) rotate(var(--r, 0deg));
+          transition:
+            transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
+            box-shadow 0.2s ease;
+        }
+        .print.dragging {
+          cursor: grabbing;
+          box-shadow: 0 34px 50px -16px rgba(18, 17, 16, 0.5);
+          transform: translate(var(--x), var(--y)) rotate(0deg) scale(1.05);
+          transition: box-shadow 0.2s ease;
+        }
+      }
+      @media (max-width: 759px) {
+        .pile {
+          display: flex;
+          align-items: flex-start;
+          gap: 18px;
+          margin: 0 calc(var(--gutter) * -1);
+          padding: 18px var(--gutter) 32px;
+          overflow-x: auto;
+          scroll-snap-type: x mandatory;
+          scrollbar-width: none;
+        }
+        .print {
+          position: relative;
+          flex: 0 0 74%;
+          scroll-snap-align: center;
+          transform: rotate(calc(var(--r, 0deg) * 0.4));
+        }
+      }
+      .lightbox {
+        position: fixed;
+        inset: 0;
+        z-index: 60;
+        display: grid;
+        place-items: center;
+        padding: 16px;
+        background: rgba(18, 17, 16, 0.94);
+        cursor: zoom-out;
+      }
+      .lightbox img {
+        max-height: 90vh;
+        border: 10px solid var(--white);
+      }
+
+      /* Greatest hits */
+      .hits {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        border-top: 2px solid var(--ink);
+      }
+      .hit {
+        display: grid;
+        grid-template-columns: 2.5rem minmax(0, 1fr);
+        gap: 6px 16px;
+        padding: 22px 0;
+        border-bottom: 2px solid var(--ink);
+        transition:
+          background 0.25s ease,
+          padding 0.25s ease;
+      }
+      .hit > :not(.hit-no) {
+        grid-column: 2;
+      }
+      .hit-no {
+        padding-top: 0.6em;
+      }
+      .hit-when {
+        font-family: var(--display);
+        font-size: clamp(2.2rem, 5vw, 4.2rem);
+        line-height: 0.9;
+        text-transform: uppercase;
+        color: transparent;
+        -webkit-text-stroke: 1.5px var(--ink);
+      }
+      .hit-title {
+        font-family: var(--display);
+        font-size: clamp(1.6rem, 3vw, 2.5rem);
+        font-weight: 400;
+        line-height: 0.95;
+        text-transform: uppercase;
+      }
+      .hit-text {
+        max-width: 40ch;
+        opacity: 0.72;
+      }
+      @media (min-width: 900px) {
+        .hit {
+          grid-template-columns: 3.5rem minmax(0, 1fr) minmax(0, 1.3fr) minmax(
+              0,
+              1.3fr
+            );
+          align-items: baseline;
+          padding: 30px 0;
+        }
+        .hit > :not(.hit-no) {
+          grid-column: auto;
+        }
+        .hit:hover {
+          padding-inline: 20px;
+          background: var(--red);
+        }
+        .hit:hover .hit-when {
+          color: var(--ink);
+        }
+      }
+
+      /* Reasons */
+      .reason-stage {
+        display: grid;
+        gap: clamp(12px, 3vw, 48px);
+        align-items: center;
+        min-height: clamp(280px, 32vw, 420px);
+        cursor: pointer;
+      }
+      @media (min-width: 900px) {
+        .reason-stage {
+          grid-template-columns: minmax(0, 0.8fr) minmax(0, 2fr);
+        }
+      }
+      .reason-num {
+        font-family: var(--display);
+        font-size: clamp(7rem, 20vw, 17rem);
+        line-height: 0.8;
+        color: var(--red);
+        font-variant-numeric: tabular-nums;
+      }
+      .reason-num small {
+        margin-left: 0.08em;
+        font-size: 0.2em;
+        color: var(--ink);
+        vertical-align: top;
+      }
+      .reason-text {
+        font-family: var(--serif);
+        font-size: clamp(2.1rem, 4.8vw, 4.4rem);
+        line-height: 1.02;
+        letter-spacing: -0.015em;
+        text-wrap: balance;
+      }
+      .reason-text.swap {
+        animation: swapIn 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      @keyframes swapIn {
+        from {
+          opacity: 0;
+          transform: translateY(0.4em);
+        }
+      }
+      .reason-bar {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-top: clamp(28px, 4vw, 48px);
+      }
+      .reason-progress {
+        flex: 1;
+        display: flex;
+        gap: 4px;
+      }
+      .reason-progress i {
+        flex: 1;
+        height: 4px;
+        background: rgba(18, 17, 16, 0.15);
+        transition: background 0.3s;
+      }
+      .reason-progress i.on {
+        background: var(--ink);
+      }
+
+      /* Group chat */
+      .phone {
+        justify-self: center;
+        width: 100%;
+        max-width: 460px;
+        padding: 10px;
+        border: 2px solid var(--ink);
+        border-radius: 34px;
+        background: var(--ink);
+        color: var(--paper);
+        box-shadow: 10px 10px 0 var(--red);
+      }
+      .phone-head {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 14px 16px;
+        border-bottom: 1px solid rgba(239, 233, 222, 0.12);
+      }
+      .phone-head b {
+        display: block;
+        font-size: 0.98rem;
+      }
+      .phone-head span {
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        color: rgba(239, 233, 222, 0.55);
+      }
+      .phone-avatars {
+        display: flex;
+      }
+      .av {
+        flex: none;
+        display: grid;
+        place-items: center;
+        width: 30px;
+        height: 30px;
+        border: 2px solid var(--ink);
+        border-radius: 50%;
+        color: var(--ink);
+        font-family: var(--mono);
+        font-size: 0.68rem;
+        font-weight: 700;
+      }
+      .chat {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 18px 10px 14px;
+      }
+      .chat-day {
+        align-self: center;
+        margin-bottom: 6px;
+        font-family: var(--mono);
+        font-size: 0.66rem;
+        text-transform: uppercase;
+        color: rgba(239, 233, 222, 0.45);
+      }
+      .msg {
+        display: flex;
+        max-width: 86%;
+        transition:
+          opacity 0.35s ease,
+          transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      .msg.pending {
+        opacity: 0;
+        transform: translateY(12px) scale(0.97);
+      }
+      .bubble {
+        padding: 10px 14px;
+        border-radius: 20px 20px 20px 6px;
+        background: #2b2926;
+        font-size: 0.98rem;
+        line-height: 1.35;
+      }
+
+      /* Cake */
+      .cake-zone {
+        border-block: 2px solid var(--ink);
+        background: var(--red);
+      }
+      .cake-split {
+        align-items: center;
+      }
+      @media (min-width: 900px) {
+        .cake-split {
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        }
+      }
+      .cake {
+        justify-self: center;
+        width: 100%;
+        max-width: 460px;
+        overflow: visible;
+      }
+      .c-plate {
+        fill: var(--white);
+        stroke: var(--ink);
+        stroke-width: 3;
+      }
+      .c-tier {
+        stroke: var(--ink);
+        stroke-width: 3;
+      }
+      .c-tier-bottom {
+        fill: var(--yellow);
+      }
+      .c-tier-top {
+        fill: var(--blue);
+      }
+      .c-frost {
+        fill: var(--white);
+        stroke: var(--ink);
+        stroke-width: 3;
+        stroke-linejoin: round;
+      }
+      .c-digit {
+        font-family: var(--display);
+        font-size: 150px;
+        fill: url(#stripes);
+        stroke: var(--ink);
+        stroke-width: 6;
+        stroke-linejoin: round;
+        paint-order: stroke;
+      }
+      .c-wick {
+        stroke: var(--ink);
+        stroke-width: 4;
+        stroke-linecap: round;
+      }
+      .c-flame {
+        fill: var(--yellow);
+        stroke: var(--ink);
+        stroke-width: 3;
+        stroke-linejoin: round;
+      }
+      .c-flame-core {
+        fill: #ff8a00;
+      }
+      .c-glow {
+        fill: #ffe7a3;
+        opacity: 0.35;
+      }
+      .flame-in {
+        transform-box: fill-box;
+        transform-origin: 50% 90%;
+        animation: flicker 0.16s ease-in-out infinite alternate;
+        transition:
+          transform 0.35s ease,
+          opacity 0.35s ease;
+      }
+      @keyframes flicker {
+        to {
+          transform: scale(0.9, 1.08) rotate(3deg);
+        }
+      }
+      .cake.out .flame-in {
+        opacity: 0;
+        transform: scale(0);
+        animation: none;
+      }
+      .smoke {
+        opacity: 0;
+        transform-box: fill-box;
+        transform-origin: 50% 100%;
+      }
+      .smoke circle {
+        fill: var(--white);
+      }
+      .cake.out .smoke {
+        animation: smoke 1.8s ease-out forwards;
+      }
+      @keyframes smoke {
+        from {
+          opacity: 0.85;
+          transform: translateY(0) scale(0.6);
+        }
+        to {
+          opacity: 0;
+          transform: translateY(-70px) scale(2.4);
+        }
+      }
+      .cake-side .big-serif span {
+        opacity: 0.6;
+      }
+      .cake-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 32px;
+      }
+      .wish {
+        margin-top: 40px;
+        animation: swapIn 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      .wish-big {
+        font-family: var(--display);
+        font-size: clamp(3rem, 8vw, 6rem);
+        line-height: 0.9;
+        text-transform: uppercase;
+      }
+      .wish-text {
+        max-width: 26ch;
+        margin-top: 12px;
+        font-family: var(--serif);
+        font-size: clamp(1.4rem, 2.6vw, 2rem);
+        line-height: 1.15;
+      }
+
+      /* Footer */
+      .footer {
+        padding: clamp(56px, 8vw, 100px) var(--gutter) 84px;
+        background: var(--ink);
+        color: var(--paper);
+      }
+      .footer-big {
+        font-family: var(--display);
+        line-height: 0.84;
+        text-transform: uppercase;
+        color: transparent;
+        -webkit-text-stroke: max(1.5px, 0.008em) var(--paper);
+      }
+      .footer-big .hl {
+        color: var(--red);
+        -webkit-text-stroke: 0;
+      }
+      .footer-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 12px 24px;
+        margin-top: clamp(24px, 4vw, 48px);
+        padding-top: 14px;
+        border-top: 2px solid rgba(239, 233, 222, 0.25);
+      }
+
+      /* Music */
+      .music {
+        position: fixed;
+        left: 16px;
+        bottom: 16px;
+        z-index: 40;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        .ch,
+        .badge-ring,
+        .sticker,
+        .tape-track,
+        .flame-in {
+          animation: none !important;
+        }
+        .reveal {
+          opacity: 1;
+          transform: none;
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="confetti" aria-hidden="true"></canvas>
+    <div class="grain" aria-hidden="true"></div>
+
+    <div class="intro" id="intro">
+      <p class="intro-hint mono">You've got mail ✦ tap the card</p>
+      <button class="intro-skip mono" id="introSkip">Skip →</button>
+      <div class="card-stage">
+        <div class="bouncer">
+          <div
+            class="card"
+            id="card"
+            role="button"
+            tabindex="0"
+            aria-label="Open the birthday card"
+          >
+            <div class="card-inside">
+              <div class="ship mono">
+                <div class="ship-head">
+                  <span>Delivery options</span><span>ETA</span>
+                </div>
+                <div class="ship-no">
+                  <span>Paper card</span><span>6–8 business days</span>
+                </div>
+                <div class="ship-yes">
+                  <span>This website</span><span>Instant ✓</span>
+                </div>
+              </div>
+              <p class="ci-note">Honestly? This is more fun anyway.</p>
+              <button class="btn btn-ink" id="enterBtn">Open the rest →</button>
+            </div>
+            <div class="card-cover">
+              <div class="cover-front">
+                <p class="cf-title"><em>a very</em>Happy<br />birthday</p>
+                <div class="cf-stamp mono">
+                  <span>✦<br /><span id="stampAge"></span>¢</span>
+                </div>
+                <div class="cf-age" id="cardAge"></div>
+                <span class="cf-hint mono">Tap to open</span>
+              </div>
+              <div class="cover-back">
+                <p class="cb-hi">Happy birthday,</p>
+                <p class="cb-name" id="cardName"></p>
+                <p class="cb-msg" id="cardMsg"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-shadow"></div>
+      </div>
+    </div>
+
+    <header class="hero" id="top">
+      <div class="masthead mono">
+        <span>Issue Nº <span id="mIssue"></span></span>
+        <span class="hide-sm" id="mTitle"></span>
+        <span id="mDate"></span>
+      </div>
+
+      <div class="hero-body">
+        <div class="hero-top">
+          <p class="kicker">
+            <em>Happy birthday</em> to the<br />one &amp; only
+          </p>
+          <div class="badge">
+            <svg class="badge-ring" viewBox="0 0 200 200" aria-hidden="true">
+              <defs>
+                <path
+                  id="ringPath"
+                  d="M100 100 m-80 0 a80 80 0 1 1 160 0 a80 80 0 1 1 -160 0"
+                />
+              </defs>
+              <text>
+                <textPath
+                  href="#ringPath"
+                  id="ringText"
+                  textLength="498"
+                  lengthAdjust="spacing"
+                ></textPath>
+              </text>
+            </svg>
+            <div class="badge-photo" id="badgePhoto"></div>
+          </div>
+        </div>
+
+        <div class="title-wrap">
+          <h1 class="hero-title">
+            <span class="fit" id="nameLine" data-max-vh="40"></span>
+            <span class="fit age-line" id="ageLine" data-max-vh="30"></span>
+          </h1>
+          <button class="sticker" id="sticker" aria-label="Throw confetti">
+            <span>Level<b id="stickerAge"></b>unlocked</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="hero-meta mono">
+        <div><span class="dim">Est.</span> <span id="metaBorn"></span></div>
+        <div>
+          <span class="dim" id="metaMidLabel"></span> <span id="metaMid"></span>
+        </div>
+        <a href="#cake">Skip to the cake ↓</a>
+      </div>
+    </header>
+
+    <div class="tapes" id="tapes" aria-hidden="true">
+      <div class="tape tape-a"><div class="tape-track" id="tapeA"></div></div>
+      <div class="tape tape-b"><div class="tape-track" id="tapeB"></div></div>
+    </div>
+
+    <main>
+      <section class="section reveal" id="gallery">
+        <div class="sec-head">
+          <div class="sec-bar mono">
+            <span class="sec-num"></span
+            ><span class="only-lg">Drag them around</span
+            ><span class="only-sm">Swipe →</span>
+          </div>
+          <h2>The <em>archive</em></h2>
+        </div>
+        <div class="pile" id="pile"></div>
+        <div class="pile-actions only-lg">
+          <button class="btn" id="shuffleBtn">Shuffle the pile</button>
+        </div>
+      </section>
+
+      <section class="section reveal" id="memories">
+        <div class="sec-head">
+          <div class="sec-bar mono">
+            <span class="sec-num"></span><span id="hitsNote"></span>
+          </div>
+          <h2>Greatest <em>hits</em></h2>
+        </div>
+        <ol class="hits" id="hits"></ol>
+      </section>
+
+      <section class="section reveal" id="reasons">
+        <div class="sec-head">
+          <div class="sec-bar mono">
+            <span class="sec-num"></span><span>Tap to keep going</span>
+          </div>
+          <h2>Reasons <em>why</em></h2>
+        </div>
+        <div
+          class="reason-stage"
+          id="reasonStage"
+          role="button"
+          tabindex="0"
+          aria-label="Show the next reason"
+        >
+          <div class="reason-num">
+            <span id="rNum"></span><small id="rOf"></small>
+          </div>
+          <p class="reason-text" id="rText" aria-live="polite"></p>
+        </div>
+        <div class="reason-bar">
+          <button class="btn" id="rPrev" aria-label="Previous reason">←</button>
+          <div class="reason-progress" id="rDots"></div>
+          <button class="btn btn-ink" id="rNext">Next →</button>
+        </div>
+      </section>
+
+      <section class="section reveal" id="messages">
+        <div class="sec-head">
+          <div class="sec-bar mono">
+            <span class="sec-num"></span><span id="chatNote"></span>
+          </div>
+          <h2>Some <em>texts</em></h2>
+        </div>
+        <div class="split flip">
+          <p class="big-serif">
+            Things I'd say to your face, <span>but this felt easier.</span>
+          </p>
+          <div class="phone">
+            <div class="phone-head">
+              <div class="phone-avatars" id="chatAvatars"></div>
+              <div><b id="chatTitle"></b><span id="chatStatus"></span></div>
+            </div>
+            <div class="chat" id="chat"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <section class="cake-zone" id="cake">
+      <div class="section reveal">
+        <div class="sec-head">
+          <div class="sec-bar mono">
+            <span class="sec-num"></span><span>Final boss</span>
+          </div>
+          <h2>Make a <em>wish</em></h2>
+        </div>
+        <div class="split cake-split">
+          <svg
+            class="cake"
+            id="cakeSvg"
+            viewBox="0 0 400 400"
+            role="img"
+            aria-label="Birthday cake with candles"
+          >
+            <defs>
+              <pattern
+                id="stripes"
+                width="18"
+                height="18"
+                patternUnits="userSpaceOnUse"
+                patternTransform="rotate(40)"
+              >
+                <rect width="18" height="18" fill="#fbf8f2" />
+                <rect width="9" height="18" fill="#2f5bff" />
+              </pattern>
+            </defs>
+            <ellipse class="c-plate" cx="200" cy="372" rx="180" ry="17" />
+            <rect
+              class="c-tier c-tier-bottom"
+              x="50"
+              y="248"
+              width="300"
+              height="120"
+              rx="14"
+            />
+            <path class="c-frost" id="frostBottom" />
+            <g id="sprinkleBottom"></g>
+            <g id="candleLayer"></g>
+            <rect
+              class="c-tier c-tier-top"
+              x="96"
+              y="160"
+              width="208"
+              height="96"
+              rx="14"
+            />
+            <path class="c-frost" id="frostTop" />
+            <g id="sprinkleTop"></g>
+          </svg>
+          <div class="cake-side">
+            <p class="big-serif">
+              Close your eyes. <span>Make it a good one.</span>
+            </p>
+            <div class="cake-actions">
+              <button class="btn btn-ink" id="blowBtn">
+                Blow out the candles
+              </button>
+              <button class="btn" id="micBtn" hidden>
+                Or blow into your mic
+              </button>
+            </div>
+            <div class="wish" id="wish" hidden>
+              <p class="wish-big">Wish granted.</p>
+              <p class="wish-text" id="wishText"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div>
+        <span class="fit footer-big" id="footBig" data-max-vh="45"></span>
+      </div>
+      <div class="footer-row mono">
+        <span>Made with love by <span id="fromName"></span></span>
+        <a href="#top">Back to top ↑</a>
+      </div>
+    </footer>
+
+    <button class="btn music" id="musicBtn" aria-pressed="false" hidden>
+      Play ♪
+    </button>
+    <audio id="audio" loop></audio>
+    <div class="lightbox" id="lightbox" hidden>
+      <img id="lightboxImg" alt="" />
+    </div>
+
+    <script>
+      /* =====================================================================
+       ✏️  EDIT THIS — all the content on the page comes from here.
+       Use {name} and {age} anywhere in the text and they'll be filled in.
+       Section headings live in the HTML above if you want to reword them.
+       An empty list hides its section.
+       ===================================================================== */
+      const CONFIG = {
+        name: "Sathvik",
+        birthDate: "2004-10-23", // YYYY-MM-DD
+        timeZone: "America/New_York", // where HE lives — the countdown hits zero at midnight there, wherever you open it
+        heroPhoto: "photos/hero.jpeg", // shows inside the spinning badge at the top
+        yourName: "Me", // shown on your texts and in the footer ("Made with love by …")
+
+        // The bouncing greeting card you see first (the shipping joke is in the HTML above)
+        cardMessage:
+          "I was going to mail you a real card, but the shipping estimate said 6–8 business days. So I built you a website instead.",
+
+        // Scrolling tapes under the hero
+        ticker: [
+          "Happy birthday {name}",
+          "Level {age} unlocked",
+          "Main character energy",
+          "Aged to perfection",
+          "Don't skip the cake",
+        ],
+
+        // Drop images into the photos/ folder and list them here.
+        // Photos are cropped to the same shape; add fit: "full" to show one uncropped.
+        photos: [
+          {
+            src: "photos/1.jpeg",
+            caption:
+              "idk how these guys thought we thought they were winning the science fair",
+            fit: "full",
+          },
+          {
+            src: "photos/2.jpeg",
+            caption: "That road trip (we look like we are holding hands)",
+          },
+          { src: "photos/3.jpeg", caption: "we almost died this day" },
+          { src: "photos/4.jpeg", caption: "The whole squad" },
+          { src: "photos/5.jpeg", caption: "Birthday #21" },
+          { src: "photos/6.jpeg", caption: "Best bromance" },
+        ],
+
+        memories: [
+          {
+            when: "Day one",
+            title: "The day we met",
+            text: "It's crazy we met in some random research methods class. If we actually kept going and did our proposal project we would be billionaires by now smh.",
+          },
+          {
+            when: "2022",
+            title: "An inside joke inside Starbucks",
+            text: "A white mazda CX-5 will forever be a funny car",
+          },
+          {
+            when: "2026",
+            title: "Legendary trip",
+            text: "Crazy trip, so much bs, literally no one would ever be able to do it like we did it. Lots of lore was gained.",
+          },
+          {
+            when: "Now",
+            title: "{age}, and counting",
+            text: "The best chapter is still being written.",
+          },
+        ],
+
+        reasons: [
+          "You show up every single time when I need you.",
+          "You give the best advice.",
+          "3 a.m. conversations with you hit different.",
+          "You make every plan more fun.",
+          "You're super loyal.",
+          "Because you're you. That's the whole list.",
+        ],
+
+        // Your texts to him — they appear one at a time, like you're typing them
+        messages: [
+          "happy birthday!!",
+          "ok real talk for a second",
+          "you gotta text me more bro fr, and respond to my calls bruh. u got a gf she can't be the only one getting your attention",
+          "{age} looks good on you",
+          "anyway. scroll down, there's cake",
+        ],
+
+        wish: "May this be your best year yet, {name}. You deserve every bit of it.",
+
+        music: "", // optional, e.g. "music/song.mp3" — adds a play button in the bottom-right corner
+      };
+    </script>
+
+    <script>
+      (() => {
+        const $ = (sel) => document.querySelector(sel);
+        const make = (tag, className, text) => {
+          const node = document.createElement(tag);
+          if (className) node.className = className;
+          if (text != null) node.textContent = text;
+          return node;
+        };
+        const svg = (tag, attrs, parent) => {
+          const node = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            tag,
+          );
+          for (const k in attrs) node.setAttribute(k, attrs[k]);
+          parent.append(node);
+          return node;
+        };
+        const rand = (a, b) => a + Math.random() * (b - a);
+        const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
+        const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+        const pad2 = (n) => String(n).padStart(2, "0");
+        const reduceMotion = matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        ).matches;
+        const desktop = matchMedia("(min-width: 760px)");
+        const COLORS = {
+          ink: "#121110",
+          red: "#ff3b1f",
+          yellow: "#ffd23f",
+          blue: "#2f5bff",
+          white: "#fbf8f2",
+        };
+        const CONFETTI = Object.values(COLORS);
+
+        /* ---------- Confetti ---------- */
+        const canvas = $("#confetti");
+        const ctx = canvas.getContext("2d");
+        let pieces = [];
+        let frame = 0;
+
+        const sizeCanvas = () => {
+          const dpr = Math.min(devicePixelRatio || 1, 2);
+          canvas.width = innerWidth * dpr;
+          canvas.height = innerHeight * dpr;
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        };
+        sizeCanvas();
+        addEventListener("resize", sizeCanvas);
+
+        function burst({
+          x = innerWidth / 2,
+          y = innerHeight / 3,
+          angle = -90,
+          spread = 360,
+          power = 12,
+          count = 120,
+        } = {}) {
+          if (reduceMotion) count = Math.round(count / 4);
+          for (let i = 0; i < count; i++) {
+            const a =
+              ((angle + (Math.random() - 0.5) * spread) * Math.PI) / 180;
+            const v = power * (0.5 + Math.random() * 0.7);
+            pieces.push({
+              x,
+              y,
+              vx: Math.cos(a) * v,
+              vy: Math.sin(a) * v,
+              w: 7 + Math.random() * 7,
+              h: 10 + Math.random() * 9,
+              color: CONFETTI[(Math.random() * CONFETTI.length) | 0],
+              rot: Math.random() * Math.PI * 2,
+              spin: (Math.random() - 0.5) * 0.3,
+              tilt: Math.random() * Math.PI * 2,
+              round: Math.random() < 0.25,
+              born: performance.now(),
+            });
+          }
+          if (!frame) frame = requestAnimationFrame(draw);
+        }
+
+        let last = 0;
+        function draw(t) {
+          // Scale the physics by elapsed time so slow or throttled tabs still clear quickly
+          const dt = last ? Math.min((t - last) / 16.7, 3) : 1;
+          last = t;
+          ctx.clearRect(0, 0, innerWidth, innerHeight);
+          for (const p of pieces) {
+            p.vy += 0.28 * dt;
+            p.vx *= 0.985 ** dt;
+            p.vy *= 0.985 ** dt;
+            p.x += p.vx * dt;
+            p.y += p.vy * dt;
+            p.rot += p.spin * dt;
+            p.tilt += 0.1 * dt;
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rot);
+            ctx.fillStyle = p.color;
+            if (p.round) {
+              ctx.beginPath();
+              ctx.arc(0, 0, p.w / 2, 0, Math.PI * 2);
+              ctx.fill();
+            } else {
+              const h = p.h * Math.abs(Math.cos(p.tilt));
+              ctx.fillRect(-p.w / 2, -h / 2, p.w, h);
+            }
+            ctx.restore();
+          }
+          pieces = pieces.filter(
+            (p) => p.y < innerHeight + 40 && t - p.born < 7000,
+          );
+          frame = pieces.length ? requestAnimationFrame(draw) : 0;
+          if (!frame) last = 0;
+        }
+
+        function celebrate() {
+          burst({
+            x: 0,
+            y: innerHeight * 0.8,
+            angle: -60,
+            spread: 50,
+            power: 21,
+          });
+          burst({
+            x: innerWidth,
+            y: innerHeight * 0.8,
+            angle: -120,
+            spread: 50,
+            power: 21,
+          });
+          setTimeout(() => burst({ count: 90, power: 10 }), 250);
+        }
+
+        /* ---------- Dates & text helpers ---------- */
+        const [by, bm, bd] = CONFIG.birthDate.split("-").map(Number);
+        // Dates are worked out in his time zone, so the countdown ends at his midnight, not the viewer's
+        const wallClock = (date) => {
+          const parts = new Intl.DateTimeFormat("en-US", {
+            timeZone: CONFIG.timeZone,
+            year: "numeric",
+            month: "numeric",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            second: "numeric",
+            hourCycle: "h23",
+          }).formatToParts(date);
+          const p = Object.fromEntries(
+            parts.map((x) => [x.type, Number(x.value)]),
+          );
+          return {
+            y: p.year,
+            m: p.month,
+            d: p.day,
+            ms: Date.UTC(
+              p.year,
+              p.month - 1,
+              p.day,
+              p.hour,
+              p.minute,
+              p.second,
+            ),
+          };
+        };
+        const midnightThere = (y, m, d) => {
+          const target = Date.UTC(y, m - 1, d);
+          let t = target;
+          for (let k = 0; k < 3; k++) t -= wallClock(new Date(t)).ms - target;
+          return t;
+        };
+        const now = new Date();
+        const today = wallClock(now);
+        const age = today.y - by;
+        const birth = new Date(by, bm - 1, bd); // for display only
+        const birthMs = midnightThere(by, bm, bd);
+        const birthdayThisYear = new Date(today.y, bm - 1, bd); // for display only
+        const birthdayMs = midnightThere(today.y, bm, bd);
+        const isToday = today.m === bm && today.d === bd;
+        const isUpcoming = !isToday && now.getTime() < birthdayMs;
+        const fill = (s = "") =>
+          String(s).replaceAll("{name}", CONFIG.name).replaceAll("{age}", age);
+        const ordinal = (n) => {
+          const s = ["th", "st", "nd", "rd"];
+          const v = n % 100;
+          return n + (s[(v - 20) % 10] || s[v] || s[0]);
+        };
+        const inWords = (n) => {
+          const ones = [
+            "zero",
+            "one",
+            "two",
+            "three",
+            "four",
+            "five",
+            "six",
+            "seven",
+            "eight",
+            "nine",
+            "ten",
+            "eleven",
+            "twelve",
+            "thirteen",
+            "fourteen",
+            "fifteen",
+            "sixteen",
+            "seventeen",
+            "eighteen",
+            "nineteen",
+          ];
+          const tens = [
+            "",
+            "",
+            "twenty",
+            "thirty",
+            "forty",
+            "fifty",
+            "sixty",
+            "seventy",
+            "eighty",
+            "ninety",
+          ];
+          if (n < 20) return ones[n];
+          if (n < 100)
+            return (
+              tens[Math.floor(n / 10)] + (n % 10 ? "-" + ones[n % 10] : "")
+            );
+          return String(n);
+        };
+        const dotted = (d) =>
+          [pad2(d.getDate()), pad2(d.getMonth() + 1), d.getFullYear()].join(
+            ".",
+          );
+        const plain = new Intl.NumberFormat("en");
+
+        /* ---------- Hero ---------- */
+        document.title = `Happy ${ordinal(age)} Birthday, ${CONFIG.name}!`;
+        $("#mIssue").textContent = age;
+        $("#mTitle").textContent = `The ${CONFIG.name} Edition`;
+        $("#mDate").textContent = dotted(birthdayThisYear);
+        $("#ringText").textContent =
+          `Happy birthday • ${CONFIG.name} • `.repeat(2);
+        $("#stickerAge").textContent = age;
+        $("#sticker").addEventListener("click", celebrate);
+
+        const splitLetters = (el, text, offset = 0) => {
+          [...text].forEach((ch, i) => {
+            const span = make("span", "ch", ch === " " ? " " : ch);
+            span.style.setProperty("--i", i + offset);
+            el.append(span);
+          });
+        };
+        splitLetters($("#nameLine"), CONFIG.name);
+        splitLetters($("#ageLine"), inWords(age), CONFIG.name.length);
+
+        const starPoints = Array.from({ length: 36 }, (_, i) => {
+          const a = (i / 36) * Math.PI * 2;
+          const r = i % 2 ? 42 : 50;
+          return `${(50 + r * Math.cos(a)).toFixed(1)}% ${(50 + r * Math.sin(a)).toFixed(1)}%`;
+        });
+        $("#sticker span").style.clipPath = `polygon(${starPoints.join(",")})`;
+
+        const badge = $("#badgePhoto");
+        badge.textContent = age;
+        if (CONFIG.heroPhoto) {
+          const img = new Image();
+          img.alt = CONFIG.name;
+          img.onload = () => badge.replaceChildren(img);
+          img.src = CONFIG.heroPhoto;
+        }
+
+        $("#metaBorn").textContent = birth.toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
+        const days = Math.floor((now - birthMs) / 864e5);
+        if (isUpcoming) {
+          $("#metaMidLabel").textContent = "T-minus";
+          const box = $("#metaMid");
+          const tick = () => {
+            const diff = birthdayMs - Date.now();
+            if (diff <= 0) {
+              clearInterval(timer);
+              $("#metaMidLabel").textContent = "Status";
+              box.textContent = "It's your birthday";
+              celebrate();
+              return;
+            }
+            box.textContent = `${Math.floor(diff / 864e5)}d ${pad2(Math.floor(diff / 36e5) % 24)}h ${pad2(Math.floor(diff / 6e4) % 60)}m ${pad2(Math.floor(diff / 1e3) % 60)}s`;
+          };
+          const timer = setInterval(tick, 1000);
+          tick();
+        } else {
+          $("#metaMidLabel").textContent = isToday ? "Today ·" : "Days in";
+          $("#metaMid").textContent = isToday
+            ? "It's your birthday"
+            : plain.format(days);
+        }
+
+        /* ---------- Ticker tapes ---------- */
+        const phrases = CONFIG.ticker.map(fill);
+        $("#tapes").hidden = !phrases.length;
+        const tapeSet = (list) => {
+          const frag = document.createDocumentFragment();
+          for (let k = 0; k < 3; k++) {
+            list.forEach((text) => {
+              const item = make("span");
+              item.append(text, make("i", "star"));
+              frag.append(item);
+            });
+          }
+          return frag;
+        };
+        const reversed = [...phrases].reverse();
+        $("#tapeA").append(tapeSet(phrases), tapeSet(phrases));
+        $("#tapeB").append(tapeSet(reversed), tapeSet(reversed));
+
+        /* ---------- Archive (draggable photo pile) ---------- */
+        const pile = $("#pile");
+        const lightbox = $("#lightbox");
+        const lightboxImg = $("#lightboxImg");
+        lightbox.addEventListener("click", () => (lightbox.hidden = true));
+        addEventListener(
+          "keydown",
+          (e) => e.key === "Escape" && (lightbox.hidden = true),
+        );
+        const openPhoto = (card) => {
+          if (card.dataset.empty) return;
+          lightboxImg.src = card.dataset.src;
+          lightboxImg.alt = card.querySelector("img").alt;
+          lightbox.hidden = false;
+        };
+
+        $("#gallery").hidden = !CONFIG.photos.length;
+        const prints = CONFIG.photos.map((photo, i) => {
+          const card = make("figure", "print");
+          card.dataset.src = photo.src;
+          const ph = make("div", "ph");
+          const img = new Image();
+          img.alt = fill(photo.caption);
+          img.draggable = false;
+          img.onerror = () => {
+            card.dataset.empty = "1";
+            ph.classList.add("empty");
+            ph.replaceChildren(
+              make("span", "plus", "+"),
+              make("span", null, "Add a photo at"),
+              make("span", null, photo.src),
+            );
+          };
+          if (photo.fit === "full") {
+            // Show the whole photo at its own shape instead of cropping it to the 4:5 frame
+            img.onload = () => {
+              ph.style.aspectRatio = `${img.naturalWidth} / ${img.naturalHeight}`;
+              scatter();
+            };
+          }
+          img.src = photo.src;
+          ph.append(img);
+          const cap = make("figcaption");
+          cap.append(
+            make("span", "no", pad2(i + 1)),
+            make("span", "cap", fill(photo.caption)),
+          );
+          card.append(ph, cap);
+          card.style.setProperty("--r", `${rand(-9, 9).toFixed(1)}deg`);
+          pile.append(card);
+          return card;
+        });
+
+        let topZ = prints.length;
+        const scatter = () => {
+          if (!desktop.matches || !prints.length) return;
+          const W = pile.clientWidth;
+          const H = pile.clientHeight;
+          const n = prints.length;
+          const cols = n > 3 ? Math.ceil(n / 2) : n;
+          const rows = Math.ceil(n / cols);
+          [...prints]
+            .sort(() => Math.random() - 0.5)
+            .forEach((card, k) => {
+              const cw = card.offsetWidth;
+              const ch = card.offsetHeight;
+              const c = k % cols;
+              const r = Math.floor(k / cols);
+              // Pull the grid towards the middle so neighbours overlap like a real pile
+              const bx =
+                cols > 1
+                  ? (0.08 + (c / (cols - 1)) * 0.84) * (W - cw)
+                  : (W - cw) / 2;
+              const by =
+                rows > 1
+                  ? (0.12 + (r / (rows - 1)) * 0.76) * (H - ch)
+                  : (H - ch) / 2;
+              card.style.setProperty(
+                "--x",
+                `${clamp(bx + rand(-70, 70), 0, W - cw)}px`,
+              );
+              card.style.setProperty(
+                "--y",
+                `${clamp(by + rand(-40, 40), 0, H - ch)}px`,
+              );
+              card.style.setProperty("--r", `${rand(-10, 10).toFixed(1)}deg`);
+              card.style.zIndex = k + 1;
+            });
+        };
+        $("#shuffleBtn").addEventListener("click", scatter);
+
+        let drag = null;
+        pile.addEventListener("pointerdown", (e) => {
+          const card = e.target.closest(".print");
+          if (!card || !desktop.matches) return;
+          e.preventDefault();
+          card.setPointerCapture(e.pointerId);
+          card.style.zIndex = ++topZ;
+          card.classList.add("dragging");
+          drag = {
+            card,
+            sx: e.clientX,
+            sy: e.clientY,
+            x: parseFloat(card.style.getPropertyValue("--x")) || 0,
+            y: parseFloat(card.style.getPropertyValue("--y")) || 0,
+            moved: false,
+          };
+        });
+        pile.addEventListener("pointermove", (e) => {
+          if (!drag) return;
+          const dx = e.clientX - drag.sx;
+          const dy = e.clientY - drag.sy;
+          if (Math.abs(dx) + Math.abs(dy) > 4) drag.moved = true;
+          drag.card.style.setProperty("--x", `${drag.x + dx}px`);
+          drag.card.style.setProperty("--y", `${drag.y + dy}px`);
+        });
+        const endDrag = () => {
+          if (!drag) return;
+          drag.card.classList.remove("dragging");
+          if (!drag.moved) openPhoto(drag.card);
+          drag = null;
+        };
+        pile.addEventListener("pointerup", endDrag);
+        pile.addEventListener("pointercancel", endDrag);
+        pile.addEventListener("click", (e) => {
+          const card = e.target.closest(".print");
+          if (card && !desktop.matches) openPhoto(card);
+        });
+
+        /* ---------- Greatest hits ---------- */
+        $("#memories").hidden = !CONFIG.memories.length;
+        $("#hitsNote").textContent = `${by} — present`;
+        CONFIG.memories.forEach((m, i) => {
+          const item = make("li", "hit");
+          item.append(
+            make("span", "hit-no mono", pad2(i + 1)),
+            make("span", "hit-when", fill(m.when)),
+            make("h3", "hit-title", fill(m.title)),
+            make("p", "hit-text", fill(m.text)),
+          );
+          $("#hits").append(item);
+        });
+
+        /* ---------- Reasons ---------- */
+        const reasons = CONFIG.reasons.map(fill);
+        $("#reasons").hidden = !reasons.length;
+        const rText = $("#rText");
+        const dots = reasons.map(() => $("#rDots").appendChild(make("i")));
+        let current = 0;
+        const showReason = (i) => {
+          current = (i + reasons.length) % reasons.length;
+          $("#rNum").textContent = pad2(current + 1);
+          rText.textContent = reasons[current];
+          rText.classList.remove("swap");
+          void rText.offsetWidth;
+          rText.classList.add("swap");
+          dots.forEach((d, k) => d.classList.toggle("on", k <= current));
+        };
+        if (reasons.length) {
+          $("#rOf").textContent = `/${pad2(reasons.length)}`;
+          showReason(0);
+        }
+        $("#rNext").addEventListener("click", () => showReason(current + 1));
+        $("#rPrev").addEventListener("click", () => showReason(current - 1));
+        $("#reasonStage").addEventListener("click", () =>
+          showReason(current + 1),
+        );
+        $("#reasonStage").addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            showReason(current + 1);
+          }
+        });
+
+        /* ---------- Texts (from you) ---------- */
+        const texts = CONFIG.messages.map(fill);
+        $("#messages").hidden = !texts.length;
+        const initials = (name) =>
+          name
+            .replace(/[^\p{L}\p{N} ]/gu, "")
+            .split(/\s+/)
+            .map((w) => w[0])
+            .join("")
+            .slice(0, 2)
+            .toUpperCase();
+        const myAvatar = make("span", "av", initials(CONFIG.yourName));
+        myAvatar.style.background = COLORS.yellow;
+        $("#chatAvatars").append(myAvatar);
+        $("#chatTitle").textContent = CONFIG.yourName;
+        $("#chatNote").textContent = `${texts.length} new messages`;
+        const status = $("#chatStatus");
+        const baseStatus = `To ${CONFIG.name}`;
+        status.textContent = baseStatus;
+        const chat = $("#chat");
+        chat.append(make("div", "chat-day", "Today"));
+        const bubbles = texts.map((text) => {
+          const msg = make("div", "msg pending");
+          msg.append(make("div", "bubble", text));
+          chat.append(msg);
+          return { msg, text };
+        });
+        const playChat = async () => {
+          for (const { msg, text } of bubbles) {
+            if (!reduceMotion) {
+              status.textContent = "typing…";
+              await wait(450 + Math.min(text.length * 12, 1000));
+            }
+            msg.classList.remove("pending");
+            if (!reduceMotion) await wait(200);
+          }
+          status.textContent = baseStatus;
+        };
+
+        /* ---------- Cake ---------- */
+        const cakeSvg = $("#cakeSvg");
+        const frosting = (x, y, w, h) => {
+          const n = Math.max(4, Math.round(w / 34));
+          const step = w / n;
+          const b = y + h;
+          let d = `M${x} ${b} V${y + 14} A14 14 0 0 1 ${x + 14} ${y} H${x + w - 14} A14 14 0 0 1 ${x + w} ${y + 14} V${b}`;
+          for (let i = n; i > 0; i--) {
+            const right = x + i * step;
+            const left = right - step;
+            if (i % 3 === 2) {
+              const mid = (left + right) / 2;
+              const len = 16 + ((i * 11) % 14);
+              d += ` Q${right - 3} ${b + 2} ${mid + 6} ${b + 4} V${b + len} A6 6 0 0 1 ${mid - 6} ${b + len} V${b + 4} Q${left + 3} ${b + 2} ${left} ${b}`;
+            } else {
+              d += ` A${step / 2} ${step / 2.6} 0 0 1 ${left} ${b}`;
+            }
+          }
+          return `${d} Z`;
+        };
+        $("#frostTop").setAttribute("d", frosting(96, 160, 208, 26));
+        $("#frostBottom").setAttribute("d", frosting(50, 248, 300, 30));
+
+        const sprinkles = (group, x0, x1, y0, y1, colors) => {
+          for (let i = 0; i < 18; i++) {
+            const x = rand(x0, x1);
+            const y = rand(y0, y1);
+            svg(
+              "rect",
+              {
+                x: x - 6,
+                y: y - 2,
+                width: 12,
+                height: 4,
+                rx: 2,
+                fill: colors[i % colors.length],
+                transform: `rotate(${rand(0, 180).toFixed(0)} ${x.toFixed(1)} ${y.toFixed(1)})`,
+              },
+              group,
+            );
+          }
+        };
+        sprinkles($("#sprinkleTop"), 112, 288, 204, 244, [
+          COLORS.white,
+          COLORS.yellow,
+          COLORS.red,
+        ]);
+        sprinkles($("#sprinkleBottom"), 66, 334, 300, 356, [
+          COLORS.red,
+          COLORS.ink,
+          COLORS.blue,
+          COLORS.white,
+        ]);
+
+        const digits = String(age).split("");
+        const BASE = 182;
+        const TOP = BASE - 150 * 0.73;
+        digits.forEach((digit, k) => {
+          const x = 200 + (k - (digits.length - 1) / 2) * 78;
+          const layer = $("#candleLayer");
+          svg(
+            "line",
+            { x1: x, y1: TOP + 2, x2: x, y2: TOP - 16, class: "c-wick" },
+            layer,
+          );
+          svg(
+            "text",
+            { x, y: BASE, "text-anchor": "middle", class: "c-digit" },
+            layer,
+          ).textContent = digit;
+          const flame = svg(
+            "g",
+            { transform: `translate(${x} ${TOP - 16})` },
+            layer,
+          );
+          const inner = svg("g", { class: "flame-in" }, flame);
+          svg("circle", { cx: 0, cy: -16, r: 30, class: "c-glow" }, inner);
+          svg(
+            "path",
+            {
+              d: "M0 -46 C8 -32 16 -22 16 -13 A16 16 0 0 1 -16 -13 C-16 -22 -8 -32 0 -46 Z",
+              class: "c-flame",
+            },
+            inner,
+          );
+          svg(
+            "path",
+            {
+              d: "M0 -27 C4 -20 8 -15 8 -10 A8 8 0 0 1 -8 -10 C-8 -15 -4 -20 0 -27 Z",
+              class: "c-flame-core",
+            },
+            inner,
+          );
+          const smoke = svg("g", { class: "smoke" }, flame);
+          svg("circle", { cx: 0, cy: -10, r: 7 }, smoke);
+          svg("circle", { cx: 6, cy: -24, r: 5 }, smoke);
+        });
+
+        const blowBtn = $("#blowBtn");
+        const micBtn = $("#micBtn");
+        $("#wishText").textContent = fill(CONFIG.wish);
+        const setLit = (lit) => {
+          cakeSvg.classList.toggle("out", !lit);
+          blowBtn.textContent = lit
+            ? "Blow out the candles"
+            : "Light them again";
+          $("#wish").hidden = lit;
+          if (!lit) {
+            const r = cakeSvg.getBoundingClientRect();
+            burst({
+              x: r.left + r.width / 2,
+              y: r.top + r.height * 0.12,
+              spread: 140,
+              power: 16,
+              count: 200,
+            });
+          }
+        };
+        blowBtn.addEventListener("click", () =>
+          setLit(cakeSvg.classList.contains("out")),
+        );
+
+        if (navigator.mediaDevices?.getUserMedia) {
+          micBtn.hidden = false;
+          micBtn.addEventListener("click", async () => {
+            try {
+              const stream = await navigator.mediaDevices.getUserMedia({
+                audio: true,
+              });
+              const audioCtx = new AudioContext();
+              const analyser = audioCtx.createAnalyser();
+              analyser.fftSize = 1024;
+              audioCtx.createMediaStreamSource(stream).connect(analyser);
+              const data = new Uint8Array(analyser.fftSize);
+              let loudFrames = 0;
+              setLit(true);
+              micBtn.textContent = "Listening — blow!";
+              micBtn.disabled = true;
+              const listen = () => {
+                analyser.getByteTimeDomainData(data);
+                let sum = 0;
+                for (const v of data) sum += ((v - 128) / 128) ** 2;
+                loudFrames =
+                  Math.sqrt(sum / data.length) > 0.15 ? loudFrames + 1 : 0;
+                if (loudFrames < 6) return void requestAnimationFrame(listen);
+                stream.getTracks().forEach((t) => t.stop());
+                audioCtx.close();
+                micBtn.textContent = "Or blow into your mic";
+                micBtn.disabled = false;
+                setLit(false);
+              };
+              listen();
+            } catch {
+              micBtn.textContent = "Mic not available";
+              micBtn.disabled = true;
+            }
+          });
+        }
+
+        /* ---------- Footer ---------- */
+        $("#fromName").textContent = CONFIG.yourName;
+        $("#footBig").append("See you at ", make("span", "hl", age + 1));
+
+        /* ---------- Music ---------- */
+        if (CONFIG.music) {
+          const audio = $("#audio");
+          const btn = $("#musicBtn");
+          audio.src = CONFIG.music;
+          btn.hidden = false;
+          btn.addEventListener("click", () =>
+            audio.paused ? audio.play() : audio.pause(),
+          );
+          audio.addEventListener("play", () => {
+            btn.textContent = "Pause ♪";
+            btn.setAttribute("aria-pressed", "true");
+          });
+          audio.addEventListener("pause", () => {
+            btn.textContent = "Play ♪";
+            btn.setAttribute("aria-pressed", "false");
+          });
+        }
+
+        /* ---------- Section numbers ---------- */
+        let num = 0;
+        document.querySelectorAll(".sec-num").forEach((el) => {
+          if (!el.closest("[hidden]")) el.textContent = `(${pad2(++num)})`;
+        });
+
+        /* ---------- Fit-to-width headlines ---------- */
+        const fit = () => {
+          document.querySelectorAll(".fit").forEach((el) => {
+            el.style.fontSize = "100px";
+            const scale =
+              el.parentElement.clientWidth / el.getBoundingClientRect().width;
+            const cap = (innerHeight * Number(el.dataset.maxVh || 100)) / 100;
+            el.style.fontSize = `${Math.min(scale * 99.5, cap)}px`;
+          });
+        };
+        fit();
+        document.fonts?.ready.then(() => {
+          fit();
+          scatter();
+        });
+        let lastWidth = innerWidth;
+        addEventListener("resize", () => {
+          fit();
+          if (innerWidth !== lastWidth) {
+            lastWidth = innerWidth;
+            scatter();
+          }
+        });
+        scatter();
+
+        /* ---------- Scroll reveal ---------- */
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (!e.isIntersecting) continue;
+              e.target.classList.add("in");
+              if (e.target.id === "messages") playChat();
+              io.unobserve(e.target);
+            }
+          },
+          { rootMargin: "0px 0px -15% 0px" },
+        );
+        document.querySelectorAll(".reveal").forEach((n) => io.observe(n));
+
+        /* ---------- Intro card ---------- */
+        const intro = $("#intro");
+        const card = $("#card");
+        document.documentElement.classList.add("intro-on");
+        $("#cardAge").textContent = age;
+        $("#stampAge").textContent = age;
+        $("#cardName").textContent = `${CONFIG.name}!`;
+        $("#cardMsg").textContent = fill(CONFIG.cardMessage);
+
+        const openCard = () => {
+          if (intro.classList.contains("opened")) return;
+          intro.classList.add("opened");
+          card.removeAttribute("role");
+          card.removeAttribute("aria-label");
+          const r = card.getBoundingClientRect();
+          setTimeout(
+            () =>
+              burst({
+                x: r.left + r.width / 2,
+                y: r.top + r.height / 2,
+                count: 70,
+                power: 9,
+              }),
+            500,
+          );
+          setTimeout(() => $("#enterBtn").focus({ preventScroll: true }), 1100);
+        };
+        const enterSite = () => {
+          scrollTo(0, 0);
+          intro.classList.add("gone");
+          document.documentElement.classList.remove("intro-on");
+          setTimeout(celebrate, 450);
+          setTimeout(() => (intro.hidden = true), 950);
+        };
+        card.addEventListener("click", openCard);
+        card.addEventListener("keydown", (e) => {
+          if (e.target === card && (e.key === "Enter" || e.key === " ")) {
+            e.preventDefault();
+            openCard();
+          }
+        });
+        $("#enterBtn").addEventListener("click", (e) => {
+          e.stopPropagation();
+          enterSite();
+        });
+        $("#introSkip").addEventListener("click", enterSite);
+        card.focus({ preventScroll: true });
+      })();
+    </script>
+  </body>
+</html>
